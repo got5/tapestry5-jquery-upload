@@ -30,7 +30,7 @@ requirejs.config({
  * @param spec.showMessagesDialog
  *            The id of the error message dialog.
  */
-define([ "t5/core/dom", "t5/core/events", "t5/core/pageinit", "tjq/vendor/components/upload/jquery.fileuploader" ], function(dom, events, pageinit) {
+define([ "t5/core/pageinit", "tjq/vendor/components/upload/jquery.fileuploader" ], function( pageinit) {
     return function(spec) {
         var el = jQuery('#' + spec.elementId),
             options = {
