@@ -97,7 +97,7 @@
 	
 	
 	<build>
-		<finalName>tapestry-jquery</finalName>
+		<finalName>tapestry5-upload</finalName>
 		<sourceDirectory>${sourceDirectory}</sourceDirectory>
         	<resources>
                   <resource>
