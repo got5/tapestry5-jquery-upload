@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.got5</groupId>
 	<artifactId>tapestry5-jquery-upload</artifactId>
-	<version>4.0.1-beta-26</version>
+	<version>4.0-beta-35-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Tapestry 5 JQuery Upload Library</name>
-	<description>Tapestry Components Library</description>
+	<description>Upload Components Library for Tapestry5</description>
 	<url>https://github.com/got5/tapestry5-jquery-upload</url>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -25,12 +25,32 @@
 		<name>GOT5</name>
 		<url>https://github.com/got5</url>
 	</organization>
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/got5/tapestry5-jquery-upload/issues</url>
+	</issueManagement>
+	<scm>
+		<connection>scm:git:git@github.com:got5/tapestry5-jquery-upload.git</connection>
+		<developerConnection>scm:git:git@github.com:got5/tapestry5-jquery-upload.git</developerConnection>
+		<url>git@github.com:got5/tapestry5-jquery-upload.git</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>ffacon</id>
+			<name>François FACON</name>
+			<roles>
+				<role>Developer</role>
+				<role>manager</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	
 	<dependencies>
 		<dependency>
          		<groupId>org.got5</groupId>
         		<artifactId>tapestry5-jquery</artifactId>
-        		<version>4.0.1-beta-26</version>
+        		<version>4.0-beta-35-SNAPSHOT</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
@@ -274,6 +294,14 @@
 	</reporting>
     <repositories>
 		<repository>
+			<id>oss—sonatype-snapshot-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots
+			</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
 			<id>Apache Staging</id>
 			<url>https://repository.apache.org/content/groups/staging</url>
 		</repository>
@@ -281,7 +309,7 @@
 			<id>central</id>
 			<name>Maven Repository</name>
 			<layout>default</layout>
-			<url>http://central.maven.org/maven2/</url>
+			<url>http://central.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -330,7 +358,7 @@
 	</profiles>
 
 	<properties>
-        <tapestry-release-version>5.4-beta-26</tapestry-release-version>
+        <tapestry-release-version>5.4-beta-35</tapestry-release-version>
         <selenium-version>2.35.0</selenium-version>
         <browserStartCommand>*googlechrome</browserStartCommand>
         <sourceDirectory>src/main/java</sourceDirectory>
