@@ -1,4 +1,4 @@
-# Tapestry 5 jQuery Upload Module - 4.0-rc-1-SNAPSHOT 
+# Tapestry 5 jQuery Upload Module - 4.0-rc-1 
 
 ## Features
 	
@@ -6,7 +6,7 @@
 	- based on [https://github.com/valums/file-uploader](https://github.com/valums/file-uploader)	
 
 ## Changelog related to Tapestry 5.4.x branch
-* 4.0-rc-1-SNAPSHOT : update to Tapestry 5.4-rc-1 
+* 4.0-rc-1 : update to Tapestry 5.4-rc-1 
 * 4.0-beta-35-SNAPSHOT : update to Tapestry 5.4-beta-35 
 * 4.0.1-beta-26 : first version for Tapestry 5.4-beta-26 
 	

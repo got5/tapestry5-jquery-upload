@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.got5</groupId>
 	<artifactId>tapestry5-jquery-upload</artifactId>
-	<version>4.0-rc-1-SNAPSHOT</version>
+	<version>4.0-rc-1</version>
 	<packaging>jar</packaging>
 	<name>Tapestry 5 JQuery Upload Library</name>
 	<description>Upload Components Library for Tapestry5</description>
@@ -50,7 +50,7 @@
 		<dependency>
          		<groupId>org.got5</groupId>
         		<artifactId>tapestry5-jquery</artifactId>
-        		<version>4.0-rc-1-SNAPSHOT</version>
+        		<version>4.0-rc-1</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
@@ -326,16 +326,6 @@
         <url>http://maven.springframework.org/release</url>
     </pluginRepository>
     </pluginRepositories>
-    <distributionManagement>
-		<repository>
-			<id>devlab722-repo</id>
-			<url>http://nexus.devlab722.net/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>devlab722-snapshot-repo</id>
-			<url>http://nexus.devlab722.net/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<profiles>
         <profile>
             <id>mac-os-test</id>
