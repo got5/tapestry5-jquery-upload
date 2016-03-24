@@ -50,7 +50,7 @@
 		<dependency>
          		<groupId>org.got5</groupId>
         		<artifactId>tapestry5-jquery</artifactId>
-        		<version>4.0-rc-1</version>
+        		<version>4.0.0</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
