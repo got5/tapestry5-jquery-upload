@@ -28,8 +28,8 @@ import org.apache.tapestry5.upload.services.MultipartDecoder;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import org.apache.tapestry5.util.TextStreamResponse;
 import org.got5.tapestry5.jquery.JQueryComponentConstants;
-import org.got5.tapestry5.jquery.JQueryEventConstants;
 import org.got5.tapestry5.jquery.base.AbstractExtendableComponent;
+import org.got5.tapestry5.jquery.JQueryUploadEventConstants;
 import org.got5.tapestry5.jquery.services.AjaxUploadDecoder;
 import org.got5.tapestry5.jquery.utils.JQueryUtils;
 
@@ -47,7 +47,7 @@ import org.got5.tapestry5.jquery.utils.JQueryUtils;
  * 
  * @tapestrydoc
  */
-@Events( { JQueryEventConstants.AJAX_UPLOAD, JQueryEventConstants.NON_XHR_UPLOAD } )
+@Events( { JQueryUploadEventConstants.AJAX_UPLOAD, JQueryUploadEventConstants.NON_XHR_UPLOAD } )
 @Import(stylesheet = "${jquery.assets.root}/vendor/components/upload/fileuploader.css")
 public class AjaxUpload extends AbstractExtendableComponent {
 
@@ -228,12 +228,12 @@ public class AjaxUpload extends AbstractExtendableComponent {
 
         if ( ! ajaxDecoder.isAjaxUploadRequest(request)) {
         	
-            this.resources.triggerEvent(JQueryEventConstants.NON_XHR_UPLOAD, ArrayUtils.addAll(new Object[]{ uploaded}, ctx.toStrings()), callback);
+            this.resources.triggerEvent(JQueryUploadEventConstants.NON_XHR_UPLOAD, ArrayUtils.addAll(new Object[]{ uploaded}, ctx.toStrings()), callback);
 
             return processNonXHRResult(success, holder.get());
         }
 
-        this.resources.triggerEvent(JQueryEventConstants.AJAX_UPLOAD, ArrayUtils.addAll(new Object[]{uploaded}, ctx.toStrings()), callback);
+        this.resources.triggerEvent(JQueryUploadEventConstants.AJAX_UPLOAD, ArrayUtils.addAll(new Object[]{uploaded}, ctx.toStrings()), callback);
         return processXHRResult(success, holder.get());
     }
 
