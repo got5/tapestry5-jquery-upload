@@ -13,7 +13,7 @@ import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.upload.services.UploadedFile;
-import org.got5.tapestry5.jquery.JQueryEventConstants;
+import org.got5.tapestry5.jquery.JQueryUploadEventConstants;
 
 public class AjaxUploadTest {
 
@@ -37,7 +37,7 @@ public class AjaxUploadTest {
             uploadedFiles = new ArrayList<UploadedFile>();
     }
 
-    @OnEvent(component = "uploadImage", value = JQueryEventConstants.AJAX_UPLOAD)
+    @OnEvent(component = "uploadImage", value = JQueryUploadEventConstants.AJAX_UPLOAD)
     void onImageUpload(UploadedFile uploadedFile) {
 
         this.uploadedFiles.add(uploadedFile);
