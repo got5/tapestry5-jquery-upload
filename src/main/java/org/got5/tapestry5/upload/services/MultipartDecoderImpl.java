@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.got5.tapestry5.jquery.services;
+package org.got5.tapestry5.upload.services;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +42,7 @@ import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.upload.internal.services.ParametersServletRequestWrapper;
 import org.apache.tapestry5.upload.internal.services.UploadedFileItem;
-import org.got5.tapestry5.jquery.services.parsers.RequestParser;
+import org.apache.tapestry5.upload.services.UploadSymbols;
 import org.slf4j.Logger;
 
 /**

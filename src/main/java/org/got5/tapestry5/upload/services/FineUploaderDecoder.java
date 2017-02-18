@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.got5.tapestry5.jquery.services;
+package org.got5.tapestry5.upload.services;
 
 import java.io.File;
 

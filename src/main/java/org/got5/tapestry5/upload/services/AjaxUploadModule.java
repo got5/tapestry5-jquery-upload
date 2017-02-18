@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package org.got5.tapestry5.jquery.services;
+package org.got5.tapestry5.upload.services;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,14 +28,15 @@ import org.apache.tapestry5.ioc.annotations.Scope;
 import org.apache.tapestry5.ioc.services.PerthreadManager;
 import org.apache.tapestry5.ioc.services.RegistryShutdownHub;
 import org.apache.tapestry5.services.HttpServletRequestFilter;
-import org.apache.tapestry5.services.LibraryMapping;;
+import org.apache.tapestry5.services.LibraryMapping;
+import org.got5.tapestry5.upload.AjaxUploadSymbolConstants;;
 
-public class JQueryUploadModule {
+public class AjaxUploadModule {
 
     private static final AtomicBoolean needToAddShutdownListener = new AtomicBoolean(true);
 
     public static void contributeComponentClassResolver(final Configuration<LibraryMapping> configuration) {
-        configuration.add(new LibraryMapping("upload", "org.got5.tapestry5.jquery"));
+        configuration.add(new LibraryMapping("upload", "org.got5.tapestry5.upload"));
     }
 
     public static void contributeClasspathAssetAliasManager(final MappedConfiguration<String, String> configuration) {
@@ -75,6 +76,6 @@ public class JQueryUploadModule {
 
     public static void contributeFactoryDefaults(final MappedConfiguration<String, String> configuration) {
 
-        configuration.add(UploadSymbols.ASSETS_ROOT, "classpath:/META-INF/assets/tjq-upload");
+        configuration.add(AjaxUploadSymbolConstants.ASSETS_ROOT, "classpath:/META-INF/assets/tjq-upload");
     }
 }

@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package org.got5.tapestry5.jquery.components;
+package org.got5.tapestry5.upload.components;
 
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.SymbolConstants;

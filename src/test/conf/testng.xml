@@ -7,7 +7,7 @@
 		
 		<packages>
     		<package name="org.got5.tapestry5.jquery">
-    			<exclude name="org.got5.tapestry5.jquery.unit"></exclude>
+    			<exclude name="org.got5.tapestry5.upload.unit"></exclude>
     		</package>
     	</packages>
         

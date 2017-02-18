@@ -1,4 +1,4 @@
-package org.got5.tapestry5.jquery;
+package org.got5.tapestry5.upload;
 
 public class AjaxUploadEventConstants {
 

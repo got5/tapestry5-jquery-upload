@@ -6,8 +6,8 @@
 	<artifactId>tapestry5-jquery-upload</artifactId>
 	<version>4.2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Tapestry 5 JQuery Upload Library</name>
-	<description>Upload Components Library for Tapestry5</description>
+	<name>Tapestry 5 Ajax Upload Library</name>
+	<description>Upload Component Library for Tapestry 5.4</description>
 	<url>https://github.com/got5/tapestry5-jquery-upload</url>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -210,8 +210,9 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
+                            <!-- let’s use a separate package to avoid naming issues with Tapestry5-jQuery -->
 							<tapestry-module-classes>
-								org.got5.tapestry5.jquery.services.JQueryUploadModule
+								org.got5.tapestry5.upload.services.AjaxUploadModule
 							</tapestry-module-classes>
 						</manifestEntries>
 					</archive>

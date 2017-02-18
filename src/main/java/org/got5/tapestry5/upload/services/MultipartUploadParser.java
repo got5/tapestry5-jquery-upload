@@ -1,4 +1,4 @@
-package org.got5.tapestry5.jquery.services;
+package org.got5.tapestry5.upload.services;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.got5.tapestry5.jquery.components;
+package org.got5.tapestry5.upload.components;
 
 import java.io.File;
 
@@ -23,9 +23,9 @@ import org.apache.tapestry5.services.PartialMarkupRendererFilter;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
-import org.got5.tapestry5.jquery.AjaxUploadEventConstants;
-import org.got5.tapestry5.jquery.services.FineUploaderDecoder;
-import org.got5.tapestry5.jquery.services.UploadSymbols;
+import org.got5.tapestry5.upload.AjaxUploadEventConstants;
+import org.got5.tapestry5.upload.AjaxUploadSymbolConstants;
+import org.got5.tapestry5.upload.services.FineUploaderDecoder;
 
 /**
  * File-Upload component based on Tapestry-Upload and https://github.com/FineUploader/fine-uploader
@@ -40,7 +40,7 @@ import org.got5.tapestry5.jquery.services.UploadSymbols;
  * @tapestrydoc
  */
 @Events({ AjaxUploadEventConstants.ALL_UPLOAD_COMPLETE, AjaxUploadEventConstants.UPLOAD })
-@Import(stylesheet = UploadSymbols.ASSETS_ROOT_VALUE + "/vendor/fineuploader/fine-uploader-new.min.css")
+@Import(stylesheet = AjaxUploadSymbolConstants.ASSETS_ROOT_VALUE + "/vendor/fineuploader/fine-uploader-new.min.css")
 public class AjaxUpload implements ClientElement {
 
     private static final String[] UNITS = new String[] { "K", "M", "G" };

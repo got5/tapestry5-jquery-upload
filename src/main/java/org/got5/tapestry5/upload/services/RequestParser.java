@@ -1,4 +1,4 @@
-package org.got5.tapestry5.jquery.services.parsers;
+package org.got5.tapestry5.upload.services;
 
 import java.io.BufferedReader;
 import java.net.URLDecoder;
@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
-import org.got5.tapestry5.jquery.services.MultipartUploadParser;
 
 public class RequestParser {
 

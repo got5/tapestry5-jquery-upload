@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.got5.tapestry5.jquery.services;
+package org.got5.tapestry5.upload.services;
 
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.ioc.MappedConfiguration;
@@ -21,8 +21,9 @@ import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
+import org.got5.tapestry5.upload.services.AjaxUploadModule;
 
-@ImportModule(value = JQueryUploadModule.class)
+@ImportModule(value = AjaxUploadModule.class)
 public class AppModule {
     @Contribute(SymbolProvider.class)
     @ApplicationDefaults
