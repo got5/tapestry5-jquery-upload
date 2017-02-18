@@ -16,50 +16,65 @@
 
 package org.got5.tapestry5.jquery.services;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.io.FileCleaningTracker;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ScopeConstants;
-import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Autobuild;
+import org.apache.tapestry5.ioc.annotations.Scope;
+import org.apache.tapestry5.ioc.services.PerthreadManager;
+import org.apache.tapestry5.ioc.services.RegistryShutdownHub;
 import org.apache.tapestry5.services.HttpServletRequestFilter;
 import org.apache.tapestry5.services.LibraryMapping;;
 
-
-
 public class JQueryUploadModule {
 
-	public static void contributeComponentClassResolver(
-			Configuration<LibraryMapping> configuration) {
-		configuration.add(new LibraryMapping("jquery-upload",
-				"org.got5.tapestry5.jquery"));
-	}
+    private static final AtomicBoolean needToAddShutdownListener = new AtomicBoolean(true);
 
-	
+    public static void contributeComponentClassResolver(final Configuration<LibraryMapping> configuration) {
+        configuration.add(new LibraryMapping("upload", "org.got5.tapestry5.jquery"));
+    }
 
-	public static void contributeClasspathAssetAliasManager(
-			MappedConfiguration<String, String> configuration) {
-		configuration.add("tapestry-jquery-upload", "META-INF/modules/tjq/upload");
-	}
+    public static void contributeClasspathAssetAliasManager(final MappedConfiguration<String, String> configuration) {
+        configuration.add("tapestry-jquery-upload", "META-INF/modules/tjq-upload");
+    }
 
-	
+    public static FileCleaningTracker buildFileCleaningTracker() {
+        return new FileCleaningTracker();
+    }
 
-	public static void bind(ServiceBinder binder) {
-		binder.bind(AjaxUploadDecoder.class, AjaxUploadDecoderImpl.class)
-				.scope(ScopeConstants.PERTHREAD);
-	}
+    @Scope(ScopeConstants.PERTHREAD)
+    public static FineUploaderDecoder buildFineUploaderDecoder(final PerthreadManager perthreadManager, final RegistryShutdownHub shutdownHub,
+            @Autobuild final MultipartDecoderImpl multipartDecoder, final FileCleaningTracker fileCleaningTracker) {
 
-	
+        // This is probably overkill since the FileCleaner should catch temporary files, but lets be safe.
+        perthreadManager.addThreadCleanupCallback(multipartDecoder);
 
+        if (needToAddShutdownListener.getAndSet(false)) {
+            shutdownHub.addRegistryShutdownListener(new Runnable() {
+                @Override
+                public void run() {
+                    fileCleaningTracker.exitWhenFinished();
+                }
+            });
+        }
 
-	public static void contributeHttpServletRequestHandler(
-			final OrderedConfiguration<HttpServletRequestFilter> configuration,
-			final AjaxUploadDecoder ajaxUploadDecoder) {
+        return multipartDecoder;
+    }
 
-		configuration.add("AjaxUploadFilter",
-				new AjaxUploadServletRequestFilter(ajaxUploadDecoder),
-				"after:IgnoredPaths");
-	}
+    public static void contributeHttpServletRequestHandler(final OrderedConfiguration<HttpServletRequestFilter> configuration,
+            final FineUploaderDecoder multipartDecoder) {
+        /*
+         * Adding the FineUploader filter before Tapestry’s ensures that both upload components can live in the same project.
+         */
+        configuration.add("FineUploaderFilter", new MultipartServletRequestFilter(multipartDecoder), "before:MultipartFilter");
+    }
 
-	
+    public static void contributeFactoryDefaults(final MappedConfiguration<String, String> configuration) {
+
+        configuration.add(UploadSymbols.ASSETS_ROOT, "classpath:/META-INF/assets/tjq-upload");
+    }
 }

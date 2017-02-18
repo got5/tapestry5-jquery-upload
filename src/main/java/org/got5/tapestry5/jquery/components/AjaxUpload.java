@@ -1,19 +1,18 @@
 package org.got5.tapestry5.jquery.components;
 
+import java.io.File;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.ClientElement;
 import org.apache.tapestry5.ComponentEventCallback;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventContext;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.annotations.Events;
 import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
-import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.internal.util.Holder;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -24,51 +23,30 @@ import org.apache.tapestry5.services.PartialMarkupRendererFilter;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
-import org.apache.tapestry5.upload.services.MultipartDecoder;
-import org.apache.tapestry5.upload.services.UploadedFile;
-import org.apache.tapestry5.util.TextStreamResponse;
-import org.got5.tapestry5.jquery.JQueryComponentConstants;
-import org.got5.tapestry5.jquery.base.AbstractExtendableComponent;
-import org.got5.tapestry5.jquery.JQueryUploadEventConstants;
-import org.got5.tapestry5.jquery.services.AjaxUploadDecoder;
-import org.got5.tapestry5.jquery.utils.JQueryUtils;
+import org.got5.tapestry5.jquery.AjaxUploadEventConstants;
+import org.got5.tapestry5.jquery.services.FineUploaderDecoder;
+import org.got5.tapestry5.jquery.services.UploadSymbols;
 
 /**
- * File-Upload component based on Tapestry-Upload and
- * https://github.com/valums/file-uploader
+ * File-Upload component based on Tapestry-Upload and https://github.com/FineUploader/fine-uploader
  *
  * <p>
- * The AjaxUpload will trigger the event
- * {@link JQueryEventConstants#AJAX_UPLOAD} after a file has been uploaded to
- * the temporary directory.
+ * The AjaxUpload will trigger the event {@link AjaxUploadEventConstants#UPLOAD} after a file has been uploaded to the temporary directory and
+ * {@link AjaxUploadEventConstants#ALL_UPLOAD_COMPLETE} after all files are uploaded.
  * </p>
  *
  * @author criedel
- * 
+ *
  * @tapestrydoc
  */
-@Events( { JQueryUploadEventConstants.AJAX_UPLOAD, JQueryUploadEventConstants.NON_XHR_UPLOAD } )
-@Import(stylesheet = "${jquery.assets.root}/vendor/components/upload/fileuploader.css")
-public class AjaxUpload extends AbstractExtendableComponent {
+@Events({ AjaxUploadEventConstants.ALL_UPLOAD_COMPLETE, AjaxUploadEventConstants.UPLOAD })
+@Import(stylesheet = UploadSymbols.ASSETS_ROOT_VALUE + "/vendor/fineuploader/fine-uploader-new.min.css")
+public class AjaxUpload implements ClientElement {
+
+    private static final String[] UNITS = new String[] { "K", "M", "G" };
 
     /**
-     * Put this as a key of your JSON response in case of NON_XHR_UPLOAD events.
-     * A JSON response of { UPDATE_ZONE_CALLBACK : { url : /your_event_callback_url/, params : /any_custom_params/ } }
-     */
-    public static final String UPDATE_ZONE_CALLBACK = "updateZone";
-
-    private static final String[] UNITS = new String[] {"K", "M", "G"};
-
-    /**
-     * (optional, default is false)
-     * Adds the 'multiple' attribute to the input element.
-     */
-    @Parameter(value = "false")
-    private boolean multiple;
-
-    /**
-     * (optional, all files are allowed by default)
-     * Restrict allowed file extensions.
+     * (optional, all files are allowed by default) Restrict allowed file extensions.
      */
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String allowedExtensions;
@@ -76,28 +54,21 @@ public class AjaxUpload extends AbstractExtendableComponent {
     /**
      * (optional, defaults to 0 = no limit)
      *
-     * The maximum size of one single file in bytes. If the number has a
-     * trailing K, M or G the limit will be calculated accordingly.
+     * The maximum size of one single file in bytes. If the number has a trailing K, M or G the limit will be calculated accordingly.
      */
     @Parameter(defaultPrefix = BindingConstants.LITERAL, value = "0")
     private String sizeLimit;
 
     /**
-     * (optional, defaults to 3)
-     * Limits the amount of parallel uploads.
-     */
-    @Parameter(value = "3")
-    private int maxConnections;
-
-    /**
-     * Additional parameters (please refer to valum's file uploader documentation)
+     * Additional parameters (please refer to FineUploader’s documentation)
+     * http://docs.fineuploader.com/branch/master/api/options.html
      */
     @Parameter
-    private JSONObject params;
+    private JSONObject options;
 
     @Parameter
     private Object[] context;
-    
+
     @Inject
     private JavaScriptSupport javaScriptSupport;
 
@@ -105,70 +76,58 @@ public class AjaxUpload extends AbstractExtendableComponent {
     private ComponentResources resources;
 
     @Inject
-    private MultipartDecoder multipartDecoder;
-
-    @Inject
-    private AjaxUploadDecoder ajaxDecoder;
-
-    @Inject
     private Request request;
 
     @Inject
     private Messages messages;
 
-    @InjectComponent
-    private Dialog uploadErrorMesages;
+    @Inject
+    private FineUploaderDecoder multipartDecoder;
 
     @Inject
     private AjaxResponseRenderer ajaxResponseRenderer;
 
-    @SetupRender
-    void setup() {
+    private String clientId;
 
-        setDefaultMethod("uploadable");
+    void beginRender(final MarkupWriter writer) {
+
+        this.clientId = javaScriptSupport.allocateClientId(resources);
+
+        writer.element("div", "id", getClientId());
     }
 
-    void afterRender() {
+    void afterRender(final MarkupWriter writer) {
 
-        if (params == null)
-            params = new JSONObject();
+        writer.end();
 
-        final JSONObject uploadMessages = new JSONObject()
-                .put("typeError", messages.get("typeError"))
-                .put("sizeError", messages.get("sizeError"))
-                .put("minSizeError", messages.get("minSizeError"))
-                .put("emptyError", messages.get("emptyError"))
-                .put("onLeave", messages.get("onLeave"))
-                .put("uploadLabel", messages.get("upload-label"))
-                .put("dropAreaLabel", messages.get("dropArea-label"))
-                .put("cancelLabel", messages.get("cancel-label"))
-                .put("failedLabel", messages.get("failed-label"))
-                .put("multipleError", messages.get("multipleError"));
+        if (options == null) {
+            options = new JSONObject();
+        }
 
         final long sizeLimit = calculateSizeLimit();
 
-        final JSONObject parameter = new JSONObject()
-                .put("elementId", getClientId())
-                .put("action", resources.createEventLink("upload", context).toURI())
-                .put("showMessagesDialog", uploadErrorMesages.getClientId())
-                .put("messages", uploadMessages)
-                .put("multiple", multiple)
-                .put("sizeLimit", sizeLimit)
-                .put("maxConnections", maxConnections);
+        final JSONObject parameter = new JSONObject("id", getClientId())
+            .put("url", resources.createEventLink("upload", context).addParameter("component", "ajaxupload").toURI())
+            .put("allCompleteURL", resources.createEventLink("allComplete", context).toURI());
+
+        final JSONObject options = new JSONObject();
+        final JSONObject validation = new JSONObject()
+                .put("sizeLimit", sizeLimit);
 
         if (allowedExtensions != null) {
-
-            parameter.put("allowedExtensions", new JSONArray(allowedExtensions));
+            validation.put("allowedExtensions", new JSONArray(allowedExtensions));
         }
+        options.put("validation", validation);
 
-        JQueryUtils.merge(parameter, params);
+        merge(options, this.options);
 
-        javaScriptSupport.require("tjq/upload").with(parameter);
+        parameter.put("options", options);
+
+        javaScriptSupport.require("tjq-upload/fineuploader").with(parameter);
     }
 
     /**
-     * @return 0 if {@link #sizeLimit} is a non valid value or the correct size
-     *         limit in bytes.
+     * @return 0 if {@link #sizeLimit} is a non valid value or the correct size limit in bytes.
      */
     private long calculateSizeLimit() {
 
@@ -193,29 +152,16 @@ public class AjaxUpload extends AbstractExtendableComponent {
         return 0;
     }
 
-    private UploadedFile getUploadedFile() {
-
-        if (ajaxDecoder.isAjaxUploadRequest(request)) {
-
-            return ajaxDecoder.getFileUpload();
-        }
-
-        return multipartDecoder.getFileUpload(JQueryComponentConstants.FILE_UPLOAD_PARAMETER);
-    }
-
     @OnEvent(value = "upload")
-    Object onUpload(EventContext ctx) {
+    Object onUpload(final EventContext ctx) {
 
-
-        UploadedFile uploaded = getUploadedFile();
-
-        if (uploaded != null && StringUtils.isEmpty(uploaded.getFileName())) {
-            uploaded = null;
-        }
+        final File uploadedFile = multipartDecoder.getFileUpload();
 
         final Holder<Object> holder = Holder.create();
+
         final ComponentEventCallback<Object> callback = new ComponentEventCallback<Object>() {
 
+            @Override
             public boolean handleResult(final Object result) {
 
                 holder.put(result);
@@ -224,17 +170,30 @@ public class AjaxUpload extends AbstractExtendableComponent {
             }
         };
 
-        final boolean success = uploaded != null;
+        final boolean success = uploadedFile != null;
 
-        if ( ! ajaxDecoder.isAjaxUploadRequest(request)) {
-        	
-            this.resources.triggerEvent(JQueryUploadEventConstants.NON_XHR_UPLOAD, ArrayUtils.addAll(new Object[]{ uploaded}, ctx.toStrings()), callback);
-
-            return processNonXHRResult(success, holder.get());
-        }
-
-        this.resources.triggerEvent(JQueryUploadEventConstants.AJAX_UPLOAD, ArrayUtils.addAll(new Object[]{uploaded}, ctx.toStrings()), callback);
+        final Object[] context = ArrayUtils.addAll(new Object[] { uploadedFile }, (Object[]) ctx.toStrings());
+        this.resources.triggerEvent(AjaxUploadEventConstants.UPLOAD, context, callback);
         return processXHRResult(success, holder.get());
+    }
+
+    @OnEvent(value = "allComplete")
+    Object onAllComplete(final EventContext ctx) {
+
+        final Holder<Object> holder = Holder.create();
+        final ComponentEventCallback<Object> callback = new ComponentEventCallback<Object>() {
+
+            @Override
+            public boolean handleResult(final Object result) {
+
+                holder.put(result);
+
+                return true;
+            }
+        };
+
+        this.resources.triggerContextEvent(AjaxUploadEventConstants.ALL_UPLOAD_COMPLETE, ctx, callback);
+        return holder.get();
     }
 
     private Object processXHRResult(final boolean success, final Object triggerResult) {
@@ -242,31 +201,59 @@ public class AjaxUpload extends AbstractExtendableComponent {
         final JSONObject result = new JSONObject().put("success", success);
         if (triggerResult != null && triggerResult instanceof JSONObject) {
 
-            JQueryUtils.merge(result, (JSONObject) triggerResult);
+            merge(result, (JSONObject) triggerResult);
             return result;
         }
 
         ajaxResponseRenderer.addFilter(new PartialMarkupRendererFilter() {
 
-            public void renderMarkup(MarkupWriter writer, JSONObject reply, PartialMarkupRenderer renderer) {
+            @Override
+            public void renderMarkup(final MarkupWriter writer, final JSONObject reply, final PartialMarkupRenderer renderer) {
 
                 renderer.renderMarkup(writer, reply);
-                JQueryUtils.merge(reply, result);
+                merge(reply, result);
             }
         });
 
         return triggerResult;
     }
 
-    private Object processNonXHRResult(boolean success, final Object triggerResult) {
+    @Override
+    public String getClientId() {
 
-        final JSONObject result = new JSONObject().put("success", success);
-        if (triggerResult != null && triggerResult instanceof JSONObject) {
+        return this.clientId;
+    }
 
-            JQueryUtils.merge(result, (JSONObject) triggerResult);
+    public JSONObject merge(final JSONObject defaults, final JSONObject overrides) {
+
+        if (defaults == null) {
+            return overrides;
         }
 
-        return new TextStreamResponse("text/html", result.toCompactString());
+        if (overrides == null) {
+            return defaults;
+        }
+
+        for (final String key : overrides.keys()) {
+
+            final Object overrideChild = overrides.get(key);
+
+            if (defaults.has(key)) {
+
+                final Object defaultChild = defaults.get(key);
+
+                if (defaultChild instanceof JSONObject && overrideChild instanceof JSONObject) {
+                    defaults.put(key, merge((JSONObject) defaultChild, (JSONObject) overrideChild));
+                } else {
+                    defaults.put(key, overrideChild);
+                }
+
+            } else {
+                defaults.put(key, overrideChild);
+            }
+        }
+
+        return defaults;
     }
 
 }

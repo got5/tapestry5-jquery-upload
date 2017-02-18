@@ -18,43 +18,34 @@ package org.got5.tapestry5.jquery.services;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
-import org.got5.tapestry5.jquery.JQuerySymbolConstants;
 
+@ImportModule(value = JQueryUploadModule.class)
+public class AppModule {
+    @Contribute(SymbolProvider.class)
+    @ApplicationDefaults
+    public static void contributeApplicationDefaults(final MappedConfiguration<String, Object> configuration) {
+        configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en,fr,de,ru,ua");
 
-@SubModule(value = JQueryUploadModule.class)
-public class AppModule
-{	
-	@Contribute(SymbolProvider.class)
-	@ApplicationDefaults
-    public static void contributeApplicationDefaults(MappedConfiguration<String, Object> configuration)
-    {
-    	configuration.add(JQuerySymbolConstants.SUPPRESS_PROTOTYPE, true);
-    	
-    	configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en,fr,de,ru,ua");
-    	
-    	configuration.add(SymbolConstants.PRODUCTION_MODE, false);
-    	
-    	configuration.add(SymbolConstants.COMBINE_SCRIPTS, false);
-    	
-    	configuration.add(SymbolConstants.COMPRESS_WHITESPACE, false);
-        
-    	configuration.add(SymbolConstants.GZIP_COMPRESSION_ENABLED, false);
-    	
-    	configuration.add(SymbolConstants.ASSET_URL_FULL_QUALIFIED, true);
-    	
-    	configuration.add(SymbolConstants.ASSET_PATH_PREFIX, "assets");
-    	configuration.add("demo-src-dir", "");
-    	
-     }
-    
-    
-    public static void contributeClasspathAssetAliasManager(MappedConfiguration<String, String> configuration)
-    {
+        configuration.add(SymbolConstants.PRODUCTION_MODE, false);
+
+        configuration.add(SymbolConstants.COMBINE_SCRIPTS, false);
+
+        configuration.add(SymbolConstants.COMPRESS_WHITESPACE, false);
+
+        configuration.add(SymbolConstants.GZIP_COMPRESSION_ENABLED, false);
+
+        configuration.add(SymbolConstants.ASSET_URL_FULL_QUALIFIED, true);
+
+        configuration.add(SymbolConstants.ASSET_PATH_PREFIX, "assets");
+        configuration.add("demo-src-dir", "");
+
+    }
+
+    public static void contributeClasspathAssetAliasManager(final MappedConfiguration<String, String> configuration) {
         configuration.add("demo-jquery", "static/css");
     }
-    
-	
+
 }
