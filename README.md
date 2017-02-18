@@ -3,8 +3,8 @@ Tapestry5-jQuery-Upload has been spun off from [Tapestry5-jQuery](https://github
 It integrates [FineUploader/fine-uploader](https://github.com/FineUploader/fine-uploader) into your Tapestry5 app.
 
 Example:
-- [AjaxUploadTest.java](https://github.com/criedel/tapestry5-jquery-upload/blob/master/src/test/java/org/got5/tapestry5/jquery/pages/AjaxUploadTest.java)
-- [AjaxUploadTest.tml](https://github.com/criedel/tapestry5-jquery-upload/blob/master/src/test/resources/org/got5/tapestry5/jquery/pages/AjaxUploadTest.tml)
+- [AjaxUploadTest.java](src/test/java/org/got5/tapestry5/upload/pages/AjaxUploadTest.java)
+- [AjaxUploadTest.tml](src/test/resources/org/got5/tapestry5/upload/pages/AjaxUploadTest.tml)
 
 Tapestry 5.4 is required. If you look for the AjaxUpload component that works with Tapestry 5.3 please use [Tapestry5-jQuery 3.x](https://github.com/got5/tapestry5-jquery). 
 
