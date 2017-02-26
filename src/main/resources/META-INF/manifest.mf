@@ -1,0 +1,1 @@
+Tapestry-Module-Classes: org.got5.tapestry5.upload.services.AjaxUploadModule

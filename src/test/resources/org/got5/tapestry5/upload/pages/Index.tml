@@ -1,0 +1,16 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" xmlns:p="tapestry:parameter">
+
+<div class="row">
+  <div class="span12">
+    <section id="list" style="padding-top: 30px;">
+      <div class="page-header">
+        <h1>jQuery Upload</h1>
+      </div>
+      <ul class="nav nav-list bs-docs-sidenav">
+        <li><a t:type="pagelink" t:page="AjaxUploadTest"><i class="icon-chevron-right"></i> Ajax Upload</a></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+</html>

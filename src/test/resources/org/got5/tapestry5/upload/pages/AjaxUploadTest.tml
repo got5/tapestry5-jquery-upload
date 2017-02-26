@@ -1,0 +1,37 @@
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" xmlns:p="tapestry:parameter" xmlns:u="tapestry-library:upload">
+
+  <div class="row">
+    <div class="span12">
+      <section id="list" style="padding-top: 30px;">
+        <div class="page-header">
+          <h1>AjaxUpload</h1>
+        </div>
+        
+        <t:alerts />
+  
+        <u:ajaxUpload t:id="uploadImage" t:context="context" t:allowedExtensions="[jpg, png, gif]" t:sizeLimit="1M" t:options="customOptions" />
+  
+        <t:zone t:id="allCompleteZone">
+          <div t:type="if" t:test="done">
+            <h1>All done</h1>
+          </div>
+        </t:zone>
+
+        <t:zone t:id="uploadResult">
+          <div t:type="if" t:test="uploadedFiles">
+            <h4>result</h4>
+  
+            <t:if test="message">
+              <p>
+                <strong>${message}</strong>
+              </p>
+            </t:if>
+  
+            <t:grid source="uploadedFiles"></t:grid>
+          </div>
+        </t:zone>
+  
+      </section>
+    </div>
+  </div>
+</html>

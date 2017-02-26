@@ -3,23 +3,13 @@
         PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-    <display-name>Tapestry 5 JQuery Upload library</display-name>
+    <display-name>Tapestry 5 Ajax Upload library</display-name>
     <context-param>
-        <!-- The only significant configuration for Tapestry 5, this informs Tapestry
-of where to look for pages, components and mixins. -->
         <param-name>tapestry.app-package</param-name>
-        <param-value>org.got5.tapestry5.jquery</param-value>
+        <param-value>org.got5.tapestry5.upload</param-value>
     </context-param>
-    <context-param>
-        <param-name>ganalytics.key</param-name>
-        <param-value></param-value>
-    </context-param>
-    <context-param>
-        <param-name>enableAnalytics</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    
-	<filter>
+
+    <filter>
         <filter-name>app</filter-name>
         <filter-class>org.apache.tapestry5.TapestryFilter</filter-class>
     </filter>
