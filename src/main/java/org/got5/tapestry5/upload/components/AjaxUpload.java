@@ -238,7 +238,7 @@ public class AjaxUpload implements ClientElement {
 
             final Object overrideChild = overrides.get(key);
 
-            if (defaults.has(key)) {
+            if (defaults.containsKey(key)) {
 
                 final Object defaultChild = defaults.get(key);
 
